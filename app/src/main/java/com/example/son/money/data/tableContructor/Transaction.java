@@ -10,11 +10,11 @@ import java.util.Date;
  */
 
 public class Transaction {
-    String Id_trans;
-    String Id_cate;
+    long Id_trans;
+    long Id_cate;
     String Note;
-    String Id_wallet;
-    String Id_event;
+    long Id_wallet;
+    long Id_event;
     String Remind;
     double Amount;
     long Time;
@@ -23,10 +23,10 @@ public class Transaction {
 
     public Transaction() {
         IsIncome = false;
-        this.Id_trans = Calendar.getInstance().getTimeInMillis()+"";
+        this.Id_trans = Calendar.getInstance().getTimeInMillis();
     }
 
-    public Transaction(String id_trans, String id_cate, String id_wallet, double amount, long time,Boolean isIncome) {
+    public Transaction(long id_trans, long id_cate, long id_wallet, double amount, long time,Boolean isIncome) {
         this.Id_trans = id_trans;
         this.Id_cate = id_cate;
         this.Id_wallet = id_wallet;
@@ -35,27 +35,27 @@ public class Transaction {
         this.IsIncome = isIncome;
     }
 
-    public Transaction(String id_cate, String id_wallet, double amount, long time, boolean isIncome) {
+    public Transaction(long id_cate, long id_wallet, double amount, long time, boolean isIncome) {
         this.Id_cate = id_cate;
         this.Id_wallet = id_wallet;
         this.Amount = amount;
         this.Time = time;
         this.IsIncome = isIncome;
-        this.Id_trans = Calendar.getInstance().getTimeInMillis()+"";
+        this.Id_trans = Calendar.getInstance().getTimeInMillis();
     }
-    public String getId_trans() {
+    public long getId_trans() {
         return Id_trans;
     }
 
-    public void setId_trans(String id_trans) {
+    public void setId_trans(long id_trans) {
         Id_trans = id_trans;
     }
 
-    public String getId_cate() {
+    public long getId_cate() {
         return Id_cate;
     }
 
-    public void setId_cate(String id_cate) {
+    public void setId_cate(long id_cate) {
         Id_cate = id_cate;
     }
 
@@ -67,19 +67,19 @@ public class Transaction {
         Note = note;
     }
 
-    public String getId_wallet() {
+    public long getId_wallet() {
         return Id_wallet;
     }
 
-    public void setId_wallet(String id_wallet) {
+    public void setId_wallet(long id_wallet) {
         Id_wallet = id_wallet;
     }
 
-    public String getId_event() {
+    public long getId_event() {
         return Id_event;
     }
 
-    public void setId_event(String id_event) {
+    public void setId_event(long id_event) {
         Id_event = id_event;
     }
 
@@ -107,7 +107,7 @@ public class Transaction {
         Time = time;
     }
 
-    public Transaction(String id_trans, String id_cate, String note, String id_wallet, String id_event, String remind, double amount, long time, boolean isIncome, double la_Location, double lo_Location) {
+    public Transaction(long id_trans, long id_cate, String note, long id_wallet, long id_event, String remind, double amount, long time, boolean isIncome, double la_Location, double lo_Location) {
         Id_trans = id_trans;
         Id_cate = id_cate;
         Note = note;

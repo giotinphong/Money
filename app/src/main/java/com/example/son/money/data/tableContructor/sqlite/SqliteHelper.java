@@ -12,6 +12,7 @@ import com.example.son.money.data.tableContructor.Transaction;
 import com.example.son.money.data.tableContructor.Wallet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -21,22 +22,22 @@ import java.util.Date;
 public class SqliteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Money";
+
     private static final String TABLE_CATE = "category";
     private static final String CATE_ID = "Id_cate";
     private static final String CATE_NAME = "Category_name";
     private static final String CATE_DAD_CATE = "Id_dad_cate";
     private static final String CATE_IS_INCOME = "IsIncome";
 
-    private static final String TABLE_TRANS = "transaction";
-
+    private static final String TABLE_TRANS = "trans";
     private static final String TRANS_ID = "Id_trans";
-    private static final String TRANS_NOTE = "NOTE";
+    private static final String TRANS_NOTE = "Note";
     private static final String TRANS_ID_EVENT = "Id_event";
-    private static final String TRANS_REMIND = "remind";
-    private static final String TRANS_DATE = "time";
-    private static final String TRANS_AMOUNT = "amount";
-    private static final String TRANS_LOCATION_LA = "la_location";
-    private static final String TRANS_LOCATION_LO = "lo_location";
+    private static final String TRANS_REMIND = "Remind";
+    private static final String TRANS_DATE = "Time";
+    private static final String TRANS_AMOUNT = "Amount";
+    private static final String TRANS_LOCATION_LA = "La_location";
+    private static final String TRANS_LOCATION_LO = "Lo_location";
 
     private static final String TABLE_WALL = "wallet";
     private static final String WALL_ID = "Id_wallet";
@@ -50,19 +51,26 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        //CREATE TRANSACTION
+        db.execSQL("create table IF NOT EXISTS " + TABLE_TRANS + "(" +
+                TRANS_ID + " NVARCHAR(50) PRIMARY KEY," + CATE_ID + " NVARCHAR(50) NOT NULL,"
+                + TRANS_NOTE + " nvarchar(50)," + WALL_ID + " NVARCHAR(50) NOT NULL," + TRANS_ID_EVENT +
+                " NVARCHAR(50)," + TRANS_REMIND + " nvarchar(50),"
+                + TRANS_AMOUNT + " DOUBLE NOT NULL," + TRANS_DATE + " LONG NOT NULL," + CATE_IS_INCOME + " BOOLEAN NOT NULL,"
+                + TRANS_LOCATION_LA + " LONG,"
+                + TRANS_LOCATION_LO + " LONG)");
+
         //create category
-        db.execSQL("create table IF NOT EXISTS " + TABLE_CATE + "(" + CATE_ID + "NVARCHAR(MAX) PRIMARY KEY," + CATE_NAME + " NVARCHAR(50) NOT NULL, "
-                        + CATE_DAD_CATE + " NVARCHAR(MAX) NOT NULL,"+
+        db.execSQL("create table IF NOT EXISTS " + TABLE_CATE + "(" + CATE_ID
+                + " NVARCHAR(50) PRIMARY KEY," + CATE_NAME + " NVARCHAR(50) NOT NULL,"
+                + CATE_DAD_CATE + " NVARCHAR(50) NOT NULL,"+
                 CATE_IS_INCOME + " BOOLEAN NOT NULL )");
 
         //create wallet
-        db.execSQL("create table IF NOT EXISTS " + TABLE_WALL + "(" + WALL_ID + "NVARCHAR(MAX) PRIMARY KEY, " + WALL_NAME + " NVARCHAR(50) NOT NULL, " + WALL_BUDGET + " DOUBLE NOT NULL)");
+        db.execSQL("create table IF NOT EXISTS " + TABLE_WALL + "(" + WALL_ID + " NVARCHAR(50) PRIMARY KEY,"
+                + WALL_NAME + " NVARCHAR(50) NOT NULL," + WALL_BUDGET + " DOUBLE NOT NULL)");
 
-        //CREATE TRANSACTION
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TRANS + "(" +
-                TRANS_ID + " NVARCHAR(MAX) PRIMARY KEY, " + CATE_ID + " NVARCHAR(MAX), " + TRANS_NOTE + " TEXT," + WALL_ID + " NVARCHAR(MAX)," + TRANS_ID_EVENT +
-                "NVARCHAR(MAX)," + TRANS_REMIND + " TEXT, " + TRANS_AMOUNT + " DOUBLE," + TRANS_DATE + " LONG," + CATE_IS_INCOME + " BOOLEAN," + TRANS_LOCATION_LA + " LONG,"
-                + TRANS_LOCATION_LO + " LONG)");
 
 
     }
@@ -79,7 +87,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
     //---------------* setup for category *---------------\\
 
     //ON category
-    public void addCategory(Category category) {
+    public String addCategory(Category category) {
          db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CATE_ID, category.getId_cate());
@@ -88,6 +96,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
         values.put(CATE_IS_INCOME, category.getIncome());
         db.insert(TABLE_CATE, null, values);
         db.close();
+        return "OK";
     }
 
     //getcategory dad
@@ -98,9 +107,9 @@ public class SqliteHelper extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
         Category category = new Category();
-        category.setId_cate(cursor.getString(0));
+        category.setId_cate(Long.parseLong(cursor.getString(0)));
         category.setCategory_name(cursor.getString(1));
-        category.setId_dad_cate(cursor.getString(2));
+        category.setId_dad_cate(Long.parseLong(cursor.getString(2)));
         category.setIncome(Boolean.valueOf(cursor.getString(3)));
         return category;
     }
@@ -116,9 +125,9 @@ public class SqliteHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do{
                 Category category = new Category();
-                category.setId_cate(cursor.getString(0));
+                category.setId_cate(Long.parseLong(cursor.getString(0)));
                 category.setCategory_name(cursor.getString(1));
-                category.setId_dad_cate(cursor.getString(2));
+                category.setId_dad_cate(Long.parseLong(cursor.getString(2)));
                 category.setIncome(Boolean.valueOf(cursor.getString(3)));
                 categoryArrayList.add(category);
             }while (cursor.moveToNext());
@@ -136,9 +145,9 @@ public class SqliteHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do{
                 Category category = new Category();
-                category.setId_cate(cursor.getString(0));
+                category.setId_cate(Long.parseLong(cursor.getString(0)));
                 category.setCategory_name(cursor.getString(1));
-                category.setId_dad_cate(cursor.getString(2));
+                category.setId_dad_cate(Long.parseLong(cursor.getString(2)));
                 category.setIncome(Boolean.valueOf(cursor.getString(3)));
                 categoryArrayList.add(category);
             }while (cursor.moveToNext());
@@ -172,7 +181,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
     //delete category
     public  void deleteCategory(Category category){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CATE,CATE_ID+"=?",new String[]{category.getId_cate()});
+        db.delete(TABLE_CATE,CATE_ID+"=?",new String[]{String.valueOf(category.getId_cate())});
         db.close();
     }
     //--------------------------* setup for wallet *-------------------------------------------------------------------------//
@@ -254,18 +263,25 @@ public class SqliteHelper extends SQLiteOpenHelper {
         db.close();
     }
     // get transaction
-    public Transaction getTransaction(String id){
+    public Transaction getTransaction(long id){
         db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_TRANS,new String[]{TRANS_ID,CATE_ID,TRANS_NOTE,WALL_ID,TRANS_ID_EVENT,
-                TRANS_REMIND,TRANS_AMOUNT,TRANS_DATE,CATE_IS_INCOME,TRANS_LOCATION_LA,TRANS_LOCATION_LO},TRANS_ID+"=?",new String[]{id},null,null,null);
+                TRANS_REMIND,TRANS_AMOUNT,TRANS_DATE,CATE_IS_INCOME,TRANS_LOCATION_LA,TRANS_LOCATION_LO},TRANS_ID+"=?",new String[]{String.valueOf(id)},
+                null,null,null);
         if(cursor != null)
             cursor.moveToFirst();
-        Transaction transaction = new Transaction(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)
-                ,cursor.getString(5),Double.parseDouble(cursor.getString(6)), Long.parseLong(cursor.getString(7)),Boolean.parseBoolean(cursor.getString(8)),
+        Transaction transaction = new Transaction(Long.parseLong(cursor.getString(0)),
+                Long.parseLong(cursor.getString(1)),cursor.getString(2),Long.parseLong(cursor.getString(3)),
+                Long.parseLong(cursor.getString(4)),cursor.getString(5),Double.parseDouble(cursor.getString(6)),
+                Long.parseLong(cursor.getString(7)),Boolean.parseBoolean(cursor.getString(8)),
                 Double.parseDouble(cursor.getString(9)),Double.parseDouble(cursor.getString(10)));
         db.close();
         return transaction;
     }
     //TODO: get all transaction of this month
-
+    public void test(){
+        Date date = Calendar.getInstance().getTime();
+        long time = date.getMonth();
+        System.out.print(time);
+    }
 }

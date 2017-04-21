@@ -1,21 +1,26 @@
 package com.example.son.money.data.tableContructor;
 
+import java.util.Calendar;
+
 /**
  * Created by son on 4/17/2017.
  */
 
 public class Category {
-    String Id_cate,Category_name,Id_dad_cate;
+    long Id_cate,Id_dad_cate;
+    String Category_name;
     Boolean IsIncome;
 
     public Category() {
+        this.Id_cate = Calendar.getInstance().getTimeInMillis();
+        this.Id_dad_cate = 0;
     }
 
-    public String getId_cate() {
+    public long getId_cate() {
         return Id_cate;
     }
 
-    public void setId_cate(String id_cate) {
+    public void setId_cate(long id_cate) {
         Id_cate = id_cate;
     }
 
@@ -27,11 +32,11 @@ public class Category {
         Category_name = category_name;
     }
 
-    public String getId_dad_cate() {
+    public long getId_dad_cate() {
         return Id_dad_cate;
     }
 
-    public void setId_dad_cate(String id_dad_cate) {
+    public void setId_dad_cate(long id_dad_cate) {
         Id_dad_cate = id_dad_cate;
     }
 
